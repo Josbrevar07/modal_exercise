@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modal Verbs Adventure | Josbrevar07</title>
+    <!-- FontAwesome for Real Social Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --primary: #2a5298;
+        --secondary: #1e3c72;
+        --success: #00b894;
+        --danger: #d63031;
+        --warning: #fdcb6e;
+        --light: #f5f5f5;
+        --dark: #2d3436;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 900px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .slide {
+        display: none;
+        background: white;
+        width: 100%;
+        padding: 30px 20px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        animation: fade 0.4s ease-in-out;
+      }
+
+      .slide.active {
+        display: block;
+      }
+
+      @keyframes fade {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      h1 {
+        color: var(--primary);
+        margin-bottom: 15px;
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+      }
+      h2 {
+        font-size: clamp(1.2rem, 3vw, 1.8rem);
+        color: var(--dark);
+      }
+      p {
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        color: #555;
+      }
+
+      .icon {
+        font-size: clamp(50px, 10vw, 80px);
+        margin: 15px 0;
+      }
+
+      .example {
+        background: var(--light);
+        padding: 15px;
+        border-radius: 12px;
+        margin: 20px auto;
+        font-size: clamp(1rem, 2.5vw, 1.2rem);
+        max-width: 90%;
+        color: var(--dark);
+        border-left: 5px solid var(--primary);
+      }
+
+      .controls {
+        margin-top: 25px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      button {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        font-weight: 600;
+        transition: 0.2s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .next {
+        background: var(--primary);
+        color: white;
+      }
+      .prev {
+        background: #888;
+        color: white;
+      }
+      .exerciseBtn {
+        background: var(--success);
+        color: white;
+        margin-top: 15px;
+        width: 100%;
+        max-width: 250px;
+      }
+      .tf-btn {
+        background: #0984e3;
+        color: white;
+        margin: 5px;
+        width: 100%;
+        max-width: 140px;
+      }
+
+      /* Responsive Inputs */
+      input[type="text"],
+      select {
+        padding: 12px 15px;
+        width: 100%;
+        max-width: 300px;
+        border-radius: 10px;
+        border: 2px solid #ddd;
+        margin-top: 15px;
+        font-size: 1rem;
+        text-align: center;
+        transition: 0.3s;
+      }
+
+      input[type="text"]:focus,
+      select:focus {
+        border-color: var(--primary);
+        outline: none;
+      }
+
+      /* Responsive Multiple Choice */
+      .mcq-labels {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-top: 15px;
+        width: 100%;
+      }
+
+      .mcq-labels label {
+        background: var(--light);
+        padding: 12px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        width: 100%;
+        max-width: 400px;
+        transition: 0.2s;
+        border: 2px solid transparent;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mcq-labels label:hover {
+        background: #dfe6e9;
+      }
+      .mcq-labels input[type="radio"] {
+        transform: scale(1.2);
+      }
+
+      /* Responsive Chart Table */
+      .chart-container {
+        width: 100%;
+        overflow-x: auto;
+        margin-top: 15px;
+      }
+
+      .chart-table {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        border-collapse: collapse;
+      }
+
+      .chart-table th,
+      .chart-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+      }
+
+      .chart-table th {
+        background: var(--primary);
+        color: white;
+      }
+
+      .feedback {
+        font-size: 1.2rem;
+        margin-top: 20px;
+        font-weight: bold;
+        min-height: 30px;
+      }
+
+      /* Summary Box */
+      .summary-box {
+        text-align: left;
+        margin-top: 20px;
+        max-height: 40vh;
+        overflow-y: auto;
+        background: var(--light);
+        border-radius: 10px;
+        padding: 15px;
+        width: 100%;
+      }
+
+      .summary-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .summary-item:last-child {
+        border-bottom: none;
+      }
+      .correct-icon {
+        color: var(--success);
+        font-size: 1.5rem;
+        margin-top: 2px;
+      }
+      .incorrect-icon {
+        color: var(--danger);
+        font-size: 1.5rem;
+        margin-top: 2px;
+      }
+
+      /* Custom Josbrevar07 Footer */
+      .custom-footer {
+        margin-top: 30px;
+        background: rgba(180, 89, 89, 0.836);
+        backdrop-filter: blur(10px);
+        padding: 25px;
+        border-radius: 20px;
+        color: white;
+        text-align: center;
+        width: 100%;
+        max-width: 900px;
+        box-shadow: 0 10px 30px rgba(252, 245, 245, 0.3);
+      }
+
+      .custom-footer h2 {
+        font-size: clamp(1.2rem, 3vw, 1.5rem);
+        margin-bottom: 5px;
+        letter-spacing: 1px;
+      }
+      .custom-footer p {
+        font-size: clamp(0.85rem, 2vw, 1rem);
+        margin: 5px 0;
+        color: #dfe6e9;
+      }
+
+      .real-socials {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        font-size: clamp(24px, 6vw, 30px);
+      }
+
+      .real-socials a {
+        color: white;
+        text-decoration: none;
+        transition: 0.3s;
+      }
+      .real-socials a:hover {
+        transform: scale(1.2) translateY(-5px);
+      }
+      .real-socials .fa-whatsapp:hover {
+        color: #25d366;
+      }
+      .real-socials .fa-instagram:hover {
+        color: #e1306c;
+      }
+      .real-socials .fa-facebook:hover {
+        color: #1877f2;
+      }
+      .real-socials .fa-youtube:hover {
+        color: #ff0000;
+      }
+      .real-socials .fa-chrome:hover {
+        color: #f4c20d;
+      }
+
+      /* Media Queries for extra small devices */
+      @media (max-width: 480px) {
+        .slide {
+          padding: 25px 15px;
+        }
+        .controls {
+          flex-direction: column;
+          width: 100%;
+        }
+        .controls button {
+          width: 100%;
+        }
+        .tf-btn {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Intro Slide -->
+      <div class="slide active" id="intro-slide">
+        <h1>Some Modal Verbs Adventure for B-1</h1>
+        <div class="icon">🚀</div>
+        <p>Welcome Grammar Explorer!</p>
+        <p style="margin-top: 20px">
+          Today you will discover the functions of modal verbs and test your
+          skills across multiple challenge types.
+        </p>
+        <div class="controls">
+          <button class="next" onclick="nextSlide(1)">Start Adventure</button>
+        </div>
+      </div>
+
+      <!-- Theory Slides (Can, Must, Should) -->
+      <div class="slide" id="theory-can">
+        <h1>CAN</h1>
+        <div class="icon">💪</div>
+        <h2>Function: Ability & Permission</h2>
+        <div class="example">
+          I can swim across the river.<br />Can I borrow your pencil?
+        </div>
+        <div class="controls">
+          <button class="prev" onclick="prevSlide(0)">Back</button>
+          <button class="next" onclick="nextSlide(2)">Next</button>
+        </div>
+      </div>
+
+      <div class="slide" id="theory-must">
+        <h1>MUST</h1>
+        <div class="icon">🛑</div>
+        <h2>Function: Strong Obligation</h2>
+        <div class="example">Drivers must stop at red lights.</div>
+        <div class="controls">
+          <button class="prev" onclick="prevSlide(1)">Back</button>
+          <button class="next" onclick="nextSlide(3)">Next</button>
+        </div>
+      </div>
+
+      <div class="slide" id="theory-should">
+        <h1>SHOULD</h1>
+        <div class="icon">📚</div>
+        <h2>Function: Advice or Recommendation</h2>
+        <div class="example">You should study English every day.</div>
+        <div class="controls">
+          <button class="prev" onclick="prevSlide(2)">Back</button>
+          <button class="next" onclick="startExercises()">
+            Start Exercises!
+          </button>
+        </div>
+      </div>
+
+      <!-- Universal Dynamic Exercise Slide -->
+      <div class="slide" id="exercise-slide">
+        <h1 id="ex-title">🎮 Challenge</h1>
+        <p
+          id="ex-type-badge"
+          style="
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+          "
+        ></p>
+        <p id="ex-prompt"></p>
+
+        <div id="ex-content-area">
+          <!-- Text, Examples, or Charts injected here -->
+        </div>
+
+        <div id="ex-input-area">
+          <!-- Inputs, Buttons, Dropdowns injected here -->
+        </div>
+
+        <div id="ex-feedback" class="feedback"></div>
+        <div class="controls">
+          <button
+            class="next"
+            id="next-ex-btn"
+            style="display: none"
+            onclick="loadNextExercise()"
+          >
+            Next Challenge
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Summary Slide -->
+      <div class="slide" id="summary-slide">
+        <h1>🏆 Mission Accomplished!</h1>
+        <div class="icon">🏅</div>
+        <h2 id="final-score">Your Score: 0/0</h2>
+
+        <div class="summary-box" id="summary-list">
+          <!-- Summary items injected here -->
+        </div>
+
+        <div class="controls">
+          <button class="next" onclick="resetAdventure()">Try Again</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Official Josbrevar 07 Footer -->
+    <div class="custom-footer">
+      <h2>Designed by Josbrevar 07</h2>
+      <p>
+        Online exercise created and designed in Santiago de Puriscal, San José,
+        Costa Rica.
+      </p>
+      <div class="real-socials">
+        <a href="https://walink.co/341b8e" target="_blank" title="WhatsApp"
+          ><i class="fa-brands fa-whatsapp"></i
+        ></a>
+        <a href="https://www.instagram.com/josbrevar07/" title="Instagram"
+          ><i class="fa-brands fa-instagram"></i
+        ></a>
+        <a href="https://www.facebook.com/josue.brenesvargas" title="Facebook"
+          ><i class="fa-brands fa-facebook"></i
+        ></a>
+        <a
+          href="https://www.youtube.com/@josbrevar0773"
+          target="_blank"
+          title="YouTube"
+          ><i class="fa-brands fa-youtube"></i
+        ></a>
+        <a
+          href="https://clases-de-manejo-personalizadas.com/"
+          target="_blank"
+          title="Website"
+          ><i class="fa-brands fa-chrome"></i
+        ></a>
+      </div>
+    </div>
+
+    <script>
+      // Navigation for static slides
+      const staticSlides = [
+        "intro-slide",
+        "theory-can",
+        "theory-must",
+        "theory-should",
+        "exercise-slide",
+        "summary-slide",
+      ];
+
+      function showStaticSlide(slideId) {
+        document
+          .querySelectorAll(".slide")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(slideId).classList.add("active");
+      }
+
+      function nextSlide(index) {
+        showStaticSlide(staticSlides[index]);
+      }
+      function prevSlide(index) {
+        showStaticSlide(staticSlides[index]);
+      }
+
+      // Advanced Question Bank with 7 Exercise Types
+      const questionBank = [
+        // 1. Gap-fill
+        {
+          type: "gap-fill",
+          prompt: "Write the correct modal verb in the blank:",
+          text: "You ______ use the seatbelt while driving.",
+          correct: "must",
+        },
+        {
+          type: "gap-fill",
+          prompt: "Write the correct modal verb in the blank:",
+          text: "I ______ speak English and Spanish fluently.",
+          correct: "can",
+        },
+
+        // 2. Multiple-choice
+        {
+          type: "multiple-choice",
+          prompt: "Choose the correct verb for the sentence:",
+          text: "My sister ______ play the piano beautifully.",
+          options: ["should", "can", "must"],
+          correct: "can",
+        },
+        {
+          type: "multiple-choice",
+          prompt: "Choose the correct verb for the sentence:",
+          text: "It's raining outside. You ______ take an umbrella.",
+          options: ["must", "can", "should"],
+          correct: "should",
+        },
+
+        // 3. Complete a chart
+        {
+          type: "complete a chart",
+          prompt:
+            "Complete the chart by selecting the correct modal for each function:",
+          chartData: [
+            { function: "Ability", correct: "can" },
+            { function: "Strong Obligation", correct: "must" },
+            { function: "Advice", correct: "should" },
+          ],
+        },
+
+        // 4. Create sentences from prompts
+        {
+          type: "create sentences",
+          prompt:
+            "Make a sentence using the prompts provided (type the full sentence):",
+          text: "you / should / study / more",
+          correct: "you should study more",
+        },
+        {
+          type: "create sentences",
+          prompt:
+            "Make a sentence using the prompts provided (type the full sentence):",
+          text: "she / can / drive / a car",
+          correct: "she can drive a car",
+        },
+
+        // 5. Rewrite sentences
+        {
+          type: "rewrite sentences",
+          prompt:
+            "Rewrite the sentence in the negative (do not use contractions):",
+          text: "You must park here.",
+          correct: "you must not park here",
+        },
+        {
+          type: "rewrite sentences",
+          prompt:
+            "Rewrite the sentence in the negative (do not use contractions):",
+          text: "He can swim.",
+          correct: "he cannot swim",
+        },
+
+        // 6. Correct or incorrect?
+        {
+          type: "correct or incorrect",
+          prompt: "Decide if this sentence is correct or incorrect:",
+          text: "You should to visit the doctor.",
+          correct: "Incorrect",
+          explain: "Modals are followed by base verbs without 'to'.",
+        },
+        {
+          type: "correct or incorrect",
+          prompt: "Decide if this sentence is correct or incorrect:",
+          text: "Birds can fly high in the sky.",
+          correct: "Correct",
+          explain: "'Can' correctly shows ability without 'to'.",
+        },
+
+        // 7. Contrasting sentences
+        {
+          type: "contrasting sentences",
+          prompt: "Compare the sentences and answer the question:",
+          text: "Which sentence describes a strong rule or obligation?",
+          options: [
+            "A) You should stop at the red light.",
+            "B) You must stop at the red light.",
+          ],
+          correct: "B) You must stop at the red light.",
+        },
+      ];
+
+      let activeQuestions = [];
+      let currentExIndex = 0;
+      let userResults = [];
+
+      function startExercises() {
+        // Shuffle questions for randomness every time
+        activeQuestions = [...questionBank].sort(() => Math.random() - 0.5);
+        currentExIndex = 0;
+        userResults = [];
+        showStaticSlide("exercise-slide");
+        renderExercise();
+      }
+
+      // Normalizes text inputs (removes punctuation, lowercases, trims)
+      function normalizeText(text) {
+        return text
+          .toLowerCase()
+          .replace(/[.,!?]/g, "")
+          .trim();
+      }
+
+      function renderExercise() {
+        let q = activeQuestions[currentExIndex];
+        document.getElementById("ex-title").innerText =
+          `🎮 Challenge ${currentExIndex + 1} of ${activeQuestions.length}`;
+        document.getElementById("ex-type-badge").innerText = `Type: ${q.type}`;
+        document.getElementById("ex-prompt").innerText = q.prompt;
+
+        let contentArea = document.getElementById("ex-content-area");
+        let inputArea = document.getElementById("ex-input-area");
+
+        contentArea.innerHTML = "";
+        inputArea.innerHTML = "";
+        document.getElementById("ex-feedback").innerHTML = "";
+        document.getElementById("next-ex-btn").style.display = "none";
+
+        // Render based on exercise type
+        if (q.type === "complete a chart") {
+          let tableHtml = `<div class="chart-container"><table class="chart-table"><tr><th>Function</th><th>Modal Verb</th></tr>`;
+          q.chartData.forEach((row, i) => {
+            tableHtml += `<tr>
+              <td>${row.function}</td>
+              <td>
+                <select id="chart-sel-${i}">
+                  <option value="">--Select--</option>
+                  <option value="can">Can</option>
+                  <option value="must">Must</option>
+                  <option value="should">Should</option>
+                </select>
+              </td>
+            </tr>`;
+          });
+          tableHtml += `</table></div>`;
+          contentArea.innerHTML = tableHtml;
+          inputArea.innerHTML = `<button class="exerciseBtn" onclick="checkChart()">Check Answers</button>`;
+        } else {
+          // All other types have a main text/example box
+          contentArea.innerHTML = `<div class="example">${q.text}</div>`;
+
+          if (
+            q.type === "gap-fill" ||
+            q.type === "create sentences" ||
+            q.type === "rewrite sentences"
+          ) {
+            inputArea.innerHTML = `
+              <input type="text" id="text-answer" placeholder="Type your answer here..." autocomplete="off"/>
+              <br/><button class="exerciseBtn" onclick="checkTextInput()">Check Answer</button>
+            `;
+          } else if (
+            q.type === "multiple-choice" ||
+            q.type === "contrasting sentences"
+          ) {
+            let html = `<div class="mcq-labels">`;
+            q.options.forEach((opt) => {
+              html += `<label><input type="radio" name="mcq" value="${opt}"> ${opt}</label>`;
+            });
+            html += `</div><button class="exerciseBtn" onclick="checkMcq()">Check Answer</button>`;
+            inputArea.innerHTML = html;
+          } else if (q.type === "correct or incorrect") {
+            inputArea.innerHTML = `
+              <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:15px;">
+                <button class="tf-btn" onclick="checkTf('Correct')">Correct</button>
+                <button class="tf-btn" style="background:var(--danger);" onclick="checkTf('Incorrect')">Incorrect</button>
+              </div>
+            `;
+          }
+        }
+      }
+
+      function logResult(isCorrect, userAnswer, correctAnswerText) {
+        let q = activeQuestions[currentExIndex];
+        let questionText =
+          q.type === "complete a chart" ? "Chart Exercise" : q.text;
+
+        userResults.push({
+          type: q.type,
+          question: questionText,
+          isCorrect: isCorrect,
+          userAnswer: userAnswer,
+          correctAnswer: correctAnswerText,
+        });
+
+        document.getElementById("next-ex-btn").style.display = "inline-block";
+        let btns = document.querySelectorAll(
+          "#ex-input-area button, #ex-input-area input, #ex-input-area select",
+        );
+        btns.forEach((b) => (b.disabled = true));
+      }
+
+      // Check Checkers
+      function checkTextInput() {
+        let q = activeQuestions[currentExIndex];
+        let rawAns = document.getElementById("text-answer").value;
+        let normAns = normalizeText(rawAns);
+        let fb = document.getElementById("ex-feedback");
+
+        if (normAns === normalizeText(q.correct)) {
+          fb.innerHTML = "✅ Excellent work!";
+          fb.style.color = "var(--success)";
+          logResult(true, rawAns, q.correct);
+        } else {
+          fb.innerHTML = `❌ Not quite. The correct answer is:<br><strong>${q.correct}</strong>`;
+          fb.style.color = "var(--danger)";
+          logResult(false, rawAns, q.correct);
+        }
+      }
+
+      function checkMcq() {
+        let q = activeQuestions[currentExIndex];
+        let options = document.getElementsByName("mcq");
+        let ans = "";
+        for (let opt of options) {
+          if (opt.checked) ans = opt.value;
+        }
+
+        let fb = document.getElementById("ex-feedback");
+        if (ans === "") {
+          fb.innerHTML = "⚠️ Please select an option.";
+          fb.style.color = "var(--warning)";
+          return;
+        }
+
+        if (ans === q.correct) {
+          fb.innerHTML = "✅ Perfect!";
+          fb.style.color = "var(--success)";
+          logResult(true, ans, q.correct);
+        } else {
+          fb.innerHTML = `❌ Incorrect. The correct answer is: <strong>${q.correct}</strong>`;
+          fb.style.color = "var(--danger)";
+          logResult(false, ans, q.correct);
+        }
+      }
+
+      function checkTf(userChoice) {
+        let q = activeQuestions[currentExIndex];
+        let fb = document.getElementById("ex-feedback");
+
+        if (userChoice === q.correct) {
+          fb.innerHTML = `✅ Great job! ${q.explain ? "<br>" + q.explain : ""}`;
+          fb.style.color = "var(--success)";
+          logResult(true, userChoice, q.correct);
+        } else {
+          fb.innerHTML = `❌ Incorrect. ${q.explain ? "<br>" + q.explain : ""}`;
+          fb.style.color = "var(--danger)";
+          logResult(false, userChoice, q.correct);
+        }
+      }
+
+      function checkChart() {
+        let q = activeQuestions[currentExIndex];
+        let fb = document.getElementById("ex-feedback");
+        let allCorrect = true;
+        let userAnswers = [];
+        let correctAnswers = [];
+
+        q.chartData.forEach((row, i) => {
+          let val = document.getElementById(`chart-sel-${i}`).value;
+          userAnswers.push(val || "Blank");
+          correctAnswers.push(row.correct);
+          if (val !== row.correct) allCorrect = false;
+        });
+
+        if (allCorrect) {
+          fb.innerHTML = "✅ Perfect! Chart completed correctly.";
+          fb.style.color = "var(--success)";
+          logResult(true, userAnswers.join(", "), correctAnswers.join(", "));
+        } else {
+          fb.innerHTML =
+            "❌ Some answers are incorrect. Check the correct chart in your summary.";
+          fb.style.color = "var(--danger)";
+          logResult(false, userAnswers.join(", "), correctAnswers.join(", "));
+        }
+      }
+
+      function loadNextExercise() {
+        currentExIndex++;
+        if (currentExIndex < activeQuestions.length) {
+          renderExercise();
+        } else {
+          showSummary();
+        }
+      }
+
+      function showSummary() {
+        showStaticSlide("summary-slide");
+        let score = userResults.filter((r) => r.isCorrect).length;
+        document.getElementById("final-score").innerText =
+          `Your Score: ${score} / ${activeQuestions.length}`;
+
+        let summaryHtml = "";
+        userResults.forEach((res, i) => {
+          let icon = res.isCorrect
+            ? `<i class="fa-solid fa-check-circle correct-icon"></i>`
+            : `<i class="fa-solid fa-times-circle incorrect-icon"></i>`;
+
+          let detailsHtml = `<div style="flex:1;">
+            <strong>Q${i + 1} [${res.type}]:</strong> ${res.question}<br>
+            <span style="color:#666; font-size:0.95rem;">Your answer: <em>${res.userAnswer || "[Empty]"}</em></span>
+          `;
+
+          if (!res.isCorrect) {
+            detailsHtml += `<br><span style="color:var(--danger); font-size:0.95rem;">Correct answer: <strong>${res.correctAnswer}</strong></span>`;
+          }
+
+          detailsHtml += `</div>`;
+          summaryHtml += `<div class="summary-item">${icon} ${detailsHtml}</div>`;
+        });
+
+        document.getElementById("summary-list").innerHTML = summaryHtml;
+      }
+
+      function resetAdventure() {
+        showStaticSlide("intro-slide");
+      }
+    </script>
+  </body>
+</html>
